@@ -13,7 +13,7 @@ export default function CitySearch({apiKey, setGeo}) {
         setGeo(geoData[0]);
       });
     }
-  },[city])
+  }, [city])
   
   return (
     <div className="flex flex-col"> 
