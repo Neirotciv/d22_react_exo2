@@ -1,4 +1,5 @@
 import DayForecast from "./DayForecast";
+import { formatDateFromTimestamp } from '../utils/date';
 import { useEffect, useState } from "react"
 
 export default function ForecastWeather({city, list}) {
@@ -15,7 +16,8 @@ export default function ForecastWeather({city, list}) {
       const step = {
         weather: data.weather[0],
         main: data.main,
-        city: city
+        city: city,
+        date: formatDateFromTimestamp(data.dt),
       }
       return step;
     })
@@ -30,10 +32,15 @@ export default function ForecastWeather({city, list}) {
   }
 
   return (
-    <>
-      {daysForecast.map((day, index) => 
-        <DayForecast key={index} forecast={day} />
-      )}
-    </>
+    <div className="">
+      {daysForecast.map((day, index) => {
+        return (
+          <div key={index} className="bg-slate-100">
+            <h2 className="pt-4 my-4 text-xl text-center">{day[0].date}</h2>
+            <DayForecast forecast={day} />
+          </div>
+        )
+      })}
+    </div>
   )
 }

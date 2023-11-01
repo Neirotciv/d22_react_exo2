@@ -1,6 +1,7 @@
 import CitySearch from "./components/CitySearch";
 import WeatherInfo from "./components/WeatherInfo";
 import WeatherForecast from "./components/WeatherForecast";
+import { formatDateFromTimestamp } from './utils/date';
 import { useEffect, useState } from "react";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             weather: weatherData.weather[0],
             main: weatherData.main,
             city: weatherData.name,
+            date: formatDateFromTimestamp(),
           }
           setWeatherData(dayWeather);
           setIsDayWeatherFetched(true);
@@ -48,12 +50,21 @@ function App() {
         });
     }
   }, [geo]);
+
+  const DayWeather = () => {
+    return (
+      <div className="flex flex-col items-center m-4">
+        <h2 className="my-2 text-xl">Météo à {weatherData.city}</h2>
+        <WeatherInfo {...weatherData} />
+      </div>
+    )
+  }
   
   return (
-    <div className="container mx-auto">
-      <h1 className="text-red-400">Weather App</h1>
+    <div className="">
+      <h1 className="my-2 text-2xl text-center text-red-400">Weather App</h1>
       <CitySearch apiKey={apiKey} setGeo={setGeo} />
-      {isDayWeatherFetched && <WeatherInfo {...weatherData} />}
+      {isDayWeatherFetched && <DayWeather />}
       {isForecastFetched && <WeatherForecast {...forecastData} />}
     </div>
   )

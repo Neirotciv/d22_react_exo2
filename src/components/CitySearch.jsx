@@ -16,15 +16,22 @@ export default function CitySearch({apiKey, setGeo}) {
   }, [city])
   
   return (
-    <div className="flex flex-col"> 
-      <label htmlFor="city">Ville</label>
-      <input 
-        className="border" 
-        type="text" 
-        id="city"
-        onChange={e => setCityInput(e.target.value)}
-      />
-      <button onClick={() => setCity(cityInput)}>Valider</button>
+    <div className="flex items-end mx-4">
+      <div className="flex flex-col w-full">
+        <label htmlFor="city">Choisir une ville</label>
+        <input 
+          className="border" 
+          type="text" 
+          id="city"
+          onChange={e => setCityInput(e.target.value)}
+        />
+      </div>
+      <button 
+        onClick={() => setCity(cityInput)}
+        className="py-1 mx-2 bg-blue-500 rounded-md hover:bg-blue-600 w-36"
+      >
+        Valider
+      </button>
     </div>
   )
 }
