@@ -5,11 +5,10 @@ export default function DayWeather({weather, main, city}) {
   
   useEffect(() => {
     setIcon(`https://openweathermap.org/img/wn/${weather.icon}@2x.png`);
-  }, [])
+  }, [weather.icon])
 
   return (
     <div>
-      <h3 className="text-black">Météo de {city}</h3>
       <img src={icon} alt="" />
       <p>{weather.description}</p>
       <ul>

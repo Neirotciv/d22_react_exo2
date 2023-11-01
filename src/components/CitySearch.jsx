@@ -17,7 +17,6 @@ export default function CitySearch({apiKey, setGeo}) {
   
   return (
     <div className="flex flex-col"> 
-      <h2>{city}</h2>
       <label htmlFor="city">Ville</label>
       <input 
         className="border" 
