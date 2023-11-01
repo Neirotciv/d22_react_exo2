@@ -1,7 +1,8 @@
 import CitySearch from "./components/CitySearch";
 import WeatherInfo from "./components/WeatherInfo";
 import WeatherForecast from "./components/WeatherForecast";
-import { formatDateFromTimestamp } from './utils/date';
+import Loading from "./components/Loading";
+import { formatDateFromTimestamp } from "./utils/date";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -15,21 +16,23 @@ function App() {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
-      setGeo({lat: latitude, lon: longitude});
+      setGeo({ lat: latitude, lon: longitude });
     });
   }, []);
 
   useEffect(() => {
     if (geo !== null) {
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(weatherData => {
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&units=metric`
+      )
+        .then((response) => response.json())
+        .then((weatherData) => {
           const dayWeather = {
             weather: weatherData.weather[0],
             main: weatherData.main,
             city: weatherData.name,
             date: formatDateFromTimestamp(),
-          }
+          };
           setWeatherData(dayWeather);
           setIsDayWeatherFetched(true);
         });
@@ -38,13 +41,15 @@ function App() {
 
   useEffect(() => {
     if (geo !== null) {
-      fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(forecastData => {
+      fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&units=metric`
+      )
+        .then((response) => response.json())
+        .then((forecastData) => {
           const forecast = {
             city: forecastData.city.name,
-            list: forecastData.list
-          }
+            list: forecastData.list,
+          };
           setForecastData(forecast);
           setIsForecastFetched(true);
         });
@@ -57,21 +62,17 @@ function App() {
         <h2 className="my-2 text-xl">Météo à {weatherData.city}</h2>
         <WeatherInfo {...weatherData} />
       </div>
-    )
-  }
-  
+    );
+  };
+
   return (
     <div className="">
       <h1 className="my-2 text-2xl text-center text-red-400">Weather App</h1>
       <CitySearch apiKey={apiKey} setGeo={setGeo} />
-      {isDayWeatherFetched && <DayWeather />}
-      {isForecastFetched && <WeatherForecast {...forecastData} />}
+      {isDayWeatherFetched ? <DayWeather /> : <Loading /> }
+      {isForecastFetched ? <WeatherForecast {...forecastData} /> : <Loading />}
     </div>
-  )
+  );
 }
 
-export default App
-
-// Météo du jour : nom de la ville, température en Celsius, description du temps et icône
-// Afficher les prévisions météo sur 5 jours toutes les trois heures
-// Loader pendant les chargements
+export default App;
