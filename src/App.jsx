@@ -1,16 +1,25 @@
 import CitySearch from "./components/CitySearch";
 import DayWeather from "./components/DayWeather";
 import WeekWeather from "./components/WeekWeather";
+import WeatherInfo from "./components/WeatherInfo"
 import { useEffect, useState } from "react";
 
 function App() {
   const apiKey = "ee9be9d03ef3e3369702f2610e323f41";
-  const [geo, setGeo] = useState();
+  const [geo, setGeo] = useState(null);
   const [dayWeather, setDayWeather] = useState();
+  const [weatherData, setWeatherData] = useState();
   const [isDayWeatherFetched, setIsDayWeatherFetched] = useState(false);
 
   useEffect(() => {
-    if (geo !== undefined) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      setGeo({lat: latitude, lon: longitude});
+    });
+  }, [])
+
+  useEffect(() => {
+    if (geo !== null) {
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&units=metric`)
         .then(response => response.json())
         .then(weatherData => {
@@ -18,9 +27,9 @@ function App() {
           const dayWeather = {
             weather: weatherData.weather[0],
             main: weatherData.main,
-            city: geo.name,
+            city: weatherData.name,
           }
-          setDayWeather(dayWeather);
+          setWeatherData(dayWeather);
           setIsDayWeatherFetched(true);
         });
     }
@@ -30,7 +39,7 @@ function App() {
     <div className="container mx-auto">
       <h1 className="text-red-400">Weather App</h1>
       <CitySearch apiKey={apiKey} setGeo={setGeo} />
-      {isDayWeatherFetched && <DayWeather dayWeather={dayWeather} />}
+      {isDayWeatherFetched && <WeatherInfo {...weatherData} />}
       <WeekWeather />
     </div>
   )
